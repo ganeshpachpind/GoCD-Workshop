@@ -1,0 +1,48 @@
+<!-- Two pipline
+     First get trigger on git chekin
+     Seconds get Trigger on cimletion of first
+     Second pipeline also publises artifact 
+   -->
+<pipelines group="defaultGroup">
+    <pipeline name="FirstPipeline">
+      <materials>
+        <git url="https://github.com/ganeshpachpind/goWorkshop.git" materialName="GOWorkshop" />
+      </materials>
+      <stage name="ListFiles">
+        <jobs>
+          <job name="List">
+            <tasks>
+              <exec command="ls" />
+            </tasks>
+            <artifacts>
+              <artifact src="*" dest="goWorkshop" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="ExecutePython">
+      <materials>
+        <pipeline pipelineName="FirstPipeline" stageName="ListFiles" />
+      </materials>
+      <stage name="Execute">
+        <jobs>
+          <job name="Run">
+            <tasks>
+              <fetchartifact pipeline="FirstPipeline" stage="ListFiles" job="List" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>python create_file.python</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="goWorkshop" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+</pipelines>
