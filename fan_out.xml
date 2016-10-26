@@ -139,22 +139,4 @@
         </jobs>
       </stage>
     </pipeline>
-    <pipeline name="Fan_In_Example">
-      <materials>
-        <pipeline pipelineName="List_AfterFiles" stageName="List_After" />
-        <pipeline pipelineName="ListAllFiles" stageName="PrintWorkingDir" materialName="PrintWoktingDep" />
-      </materials>
-      <stage name="defaultStage">
-        <jobs>
-          <job name="PrintTime">
-            <tasks>
-              <exec command="/bin/bash">
-                <arg>-c</arg>
-                <arg>date</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
   </pipelines>

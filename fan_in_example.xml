@@ -1,92 +1,160 @@
-<!-- Fan in concept example
- -->
+<!-- Modified previous pipeline to show example of Fan out concept -->
 <pipelines group="defaultGroup">
-   <pipeline name="FirstPipeline">
-     <materials>
-       <git url="https://github.com/ganeshpachpind/goWorkshop.git" materialName="GOWorkshop" />
-     </materials>
-     <stage name="ListFiles">
-       <jobs>
-         <job name="List">
-           <tasks>
-             <exec command="ls" />
-           </tasks>
-           <artifacts>
-             <artifact src="*" dest="goWorkshop" />
-           </artifacts>
-         </job>
-       </jobs>
-     </stage>
-   </pipeline>
-   <pipeline name="ExecutePython">
-     <materials>
-       <pipeline pipelineName="FirstPipeline" stageName="ListFiles" />
-     </materials>
-     <stage name="Execute">
-       <jobs>
-         <job name="Run">
-           <tasks>
-             <fetchartifact pipeline="FirstPipeline" stage="ListFiles" job="List" srcdir="goWorkshop">
-               <runif status="passed" />
-             </fetchartifact>
-             <exec command="/bin/bash" workingdir="goWorkshop">
-               <arg>-c</arg>
-               <arg>python create_file.python</arg>
-               <runif status="passed" />
-             </exec>
-           </tasks>
-           <artifacts>
-             <artifact src="goWorkshop" />
-           </artifacts>
-         </job>
-       </jobs>
-     </stage>
-   </pipeline>
-   <pipeline name="List_AfterFiles">
-     <materials>
-       <pipeline pipelineName="ExecutePython" stageName="Execute" />
-     </materials>
-     <stage name="List_After">
-       <jobs>
-         <job name="List_after_details">
-           <tasks>
-             <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
-               <runif status="passed" />
-             </fetchartifact>
-             <exec command="/bin/bash" workingdir="goWorkshop">
-               <arg>-c</arg>
-               <arg>ls</arg>
-               <runif status="passed" />
-             </exec>
-           </tasks>
-         </job>
-       </jobs>
-     </stage>
-     <stage name="Print_Name_Using_Script">
-       <jobs>
-         <job name="Just_Print_NAME">
-           <environmentvariables>
-             <variable name="NAME">
-               <value>Ganesh Pachpind</value>
-             </variable>
-           </environmentvariables>
-           <tasks>
-             <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
-               <runif status="passed" />
-             </fetchartifact>
-             <exec command="/bin/bash" workingdir="goWorkshop">
-               <arg>-c</arg>
-               <arg>chmod 777 print_name.sh</arg>
-               <runif status="passed" />
-             </exec>
-             <exec command="/bin/bash" workingdir="goWorkshop">
-               <arg>-c</arg>
-               <arg>sh print_name.sh</arg>
-               <runif status="passed" />
-             </exec>
-           </tasks>
-         </job>
-       </jobs>
-     </stage>
-   </pipeline>
-<pipelines>
+    <pipeline name="FirstPipeline">
+      <materials>
+        <git url="https://github.com/ganeshpachpind/goWorkshop.git" materialName="GOWorkshop" />
+      </materials>
+      <stage name="ListFiles">
+        <jobs>
+          <job name="List">
+            <tasks>
+              <exec command="ls" />
+            </tasks>
+            <artifacts>
+              <artifact src="*" dest="goWorkshop" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="ExecutePython">
+      <materials>
+        <pipeline pipelineName="FirstPipeline" stageName="ListFiles" />
+      </materials>
+      <stage name="Execute">
+        <jobs>
+          <job name="Run">
+            <tasks>
+              <fetchartifact pipeline="FirstPipeline" stage="ListFiles" job="List" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>python create_file.python</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="goWorkshop" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="List_AfterFiles">
+      <materials>
+        <pipeline pipelineName="ExecutePython" stageName="Execute" />
+      </materials>
+      <stage name="List_After">
+        <jobs>
+          <job name="List_after_details">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>ls</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Print_Name_Using_Script">
+        <jobs>
+          <job name="Just_Print_NAME">
+            <environmentvariables>
+              <variable name="NAME">
+                <value>Ganesh Pachpind</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>chmod 777 print_name.sh</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>sh print_name.sh</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="ListAllFiles">
+      <materials>
+        <pipeline pipelineName="ExecutePython" stageName="Execute" />
+      </materials>
+      <stage name="ListAll">
+        <jobs>
+          <job name="ListAll">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>ls -la</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Sleep">
+        <jobs>
+          <job name="Sleep">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>sleep 60</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="PrintWorkingDir">
+        <jobs>
+          <job name="WorkingDir">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>pwd</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="Fan_In_Example">
+      <materials>
+        <pipeline pipelineName="List_AfterFiles" stageName="List_After" />
+        <pipeline pipelineName="ListAllFiles" stageName="PrintWorkingDir" materialName="PrintWoktingDep" />
+      </materials>
+      <stage name="defaultStage">
+        <jobs>
+          <job name="PrintTime">
+            <tasks>
+              <exec command="/bin/bash">
+                <arg>-c</arg>
+                <arg>date</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
