@@ -1,0 +1,4 @@
+import io
+
+with io.FileIO("print_name.sh", "w") as file:
+    file.write("echo Hello ${NAME} \r\n")
