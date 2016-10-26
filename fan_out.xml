@@ -35,7 +35,7 @@
               </exec>
             </tasks>
             <artifacts>
-              <artifact src="*" dest="goWorkshop" />
+              <artifact src="goWorkshop" />
             </artifacts>
           </job>
         </jobs>
@@ -61,13 +61,27 @@
           </job>
         </jobs>
       </stage>
-      <stage name="Another_Stage_Just">
+      <stage name="Print_Name_Using_Script">
         <jobs>
-          <job name="Just_Print_PS">
+          <job name="Just_Print_NAME">
+            <environmentvariables>
+              <variable name="NAME">
+                <value>Ganesh Pachpind</value>
+              </variable>
+            </environmentvariables>
             <tasks>
-              <exec command="/bin/bash">
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
                 <arg>-c</arg>
-                <arg>ps</arg>
+                <arg>chmod 777 print_name.sh</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>sh print_name.sh</arg>
+                <runif status="passed" />
               </exec>
             </tasks>
           </job>
