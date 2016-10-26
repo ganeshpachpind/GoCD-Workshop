@@ -1,0 +1,19 @@
+<pipelines group="defaultGroup">
+    <pipeline name="FirstPipeline">
+      <materials>
+        <git url="https://github.com/ganeshpachpind/goWorkshop.git" materialName="GOWorkshop" />
+      </materials>
+      <stage name="ListFiles">
+        <jobs>
+          <job name="List">
+            <tasks>
+              <exec command="ls" />
+            </tasks>
+            <artifacts>
+              <artifact src="*" dest="goWorkshop" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+</pipelines>
