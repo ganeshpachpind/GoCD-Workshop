@@ -61,6 +61,18 @@
           </job>
         </jobs>
       </stage>
+      <stage name="Another_Stage_Just">
+        <jobs>
+          <job name="Just_Print_PS">
+            <tasks>
+              <exec command="/bin/bash">
+                <arg>-c</arg>
+                <arg>ps</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
     </pipeline>
     <pipeline name="ListAllFiles">
       <materials>
@@ -77,6 +89,54 @@
                 <arg>-c</arg>
                 <arg>ls -la</arg>
                 <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Sleep">
+        <jobs>
+          <job name="Sleep">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>sleep 60</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="PrintWorkingDir">
+        <jobs>
+          <job name="WorkingDir">
+            <tasks>
+              <fetchartifact pipeline="ExecutePython" stage="Execute" job="Run" srcdir="goWorkshop">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="goWorkshop">
+                <arg>-c</arg>
+                <arg>pwd</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="Fan_In_Example">
+      <materials>
+        <pipeline pipelineName="List_AfterFiles" stageName="List_After" />
+        <pipeline pipelineName="ListAllFiles" stageName="PrintWorkingDir" materialName="PrintWoktingDep" />
+      </materials>
+      <stage name="defaultStage">
+        <jobs>
+          <job name="PrintTime">
+            <tasks>
+              <exec command="/bin/bash">
+                <arg>-c</arg>
+                <arg>date</arg>
               </exec>
             </tasks>
           </job>
