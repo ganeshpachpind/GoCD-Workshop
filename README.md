@@ -1,4 +1,4 @@
-Repository for <a href="">GO CD</a> hands on workshop.
+Repository for <a href="https://www.gocd.io/">GO CD</a> hands on workshop at <a href="https://www.thoughtworks.com/">Thoughtworks</a>.
 
 # Installation :  
 1. Download and extract GOCD Server and Agent zip.  
